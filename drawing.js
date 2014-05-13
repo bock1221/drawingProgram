@@ -1,5 +1,5 @@
 $(function() {"use strict";
-    var canvas = $("#it"), context =canvas[0].getContext('2d'), width, height, theBody = $('body'), pressing, lineArray =[], aLinesArray =[];
+    var canvas = $("#it"), context =canvas[0].getContext('2d'), undo, redoArray=[], width, height, theBody = $('body'), pressing, lineArray =[], aLinesArray =[];
     function setCanvasSize() {
         var theBody = $('body');
         width = theBody.innerWidth();
@@ -33,8 +33,27 @@ $(function() {"use strict";
          });  
        });
     }
-
-
+       undo = (function()  {
+        $("#undo").click(function(){
+            if(aLinesArray.length){
+            redoArray.push(aLinesArray.pop());
+            localStorage.linesArray = JSON.stringify(aLinesArray);
+            context.clearRect(0,0,width,height);
+            redraw();
+            }
+        });
+    }());
+    
+    function redo(){
+        $("#redo").click(function(){
+            if(redoArray.length){
+            aLinesArray.push(redoArray.pop());
+            localStorage.linesArray = JSON.stringify(aLinesArray);
+            redraw();
+            }
+        });
+    }
+      redo();
     $("#lineButton").click(function() {
        canvas.unbind();
        $('body').unbind();
@@ -42,7 +61,7 @@ $(function() {"use strict";
             if(event.which===1){
             var time = 0;
             
-            lineArray=[];
+            lineArray=[ ];
             pressing = true;
             console.dir(event);
             context.beginPath();
@@ -56,6 +75,7 @@ $(function() {"use strict";
 
         canvas.mousemove(function(event) {
             if (pressing) {
+                redoArray=[];
                 lineArray.push({
                     x : event.offsetX,
                     y : event.offsetY
