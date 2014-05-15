@@ -11,27 +11,35 @@
 		<meta name="description" content="">
 		<meta name="author" content="steve bock">
 
-		
 		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
 		<link rel="shortcut icon" href="/favicon.ico">
 		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-	    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-         <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-         <link rel="stylesheet" type="text/css" href="drawing.css">
-         <script src="drawing.js"></script> 
-		
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="drawing.css">
+		<script src="drawing.js"></script>
+
 		<style>
-			
 		</style>
-		
+
 	</head>
 
 	<body>
-		<button id="lineButton" class="buttonbBar"><img src="Line.ico" id="line" /></button>
-		<button id="undo" class="buttonbBar">undo</button>	
-		<button id="redo" class="buttonbBar">redo</button>	
-			<canvas id="it"></canvas>
-	       
+		<div id=buttonDiv>
+			<button id="lineButton" class="buttonbBar"><img src="Line.ico" id="line" />
+			</button>
+			<button id="undo" class="buttonbBar">
+				undo
+			</button>
+			<button id="redo" class="buttonbBar">
+				redo
+			</button>
+			<button id="clear" class="buttonbBar">
+				clear
+			</button>
+		</div>
+		<canvas id="it"></canvas>
+
 	</body>
 </html>
