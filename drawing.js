@@ -1,5 +1,5 @@
 $(function() {"use strict";
-	var canvas = $("#it"), context = canvas[0].getContext('2d'), getDB, drawingLink, dialogBox, sendDB, undo, redoArray = [], width, height, theBody = $('body'), pressing, lineArray = [], aLinesArray = [], strokeColor, drawingName;
+	var canvas = $("#it"), context = canvas[0].getContext('2d'), getDB, startPoint, redrawFromDB, drawingLink, dialogBox, sendDB, undo, redoArray = [], width, height, theBody = $('body'), pressing, lineArray = [], aLinesArray = [], strokeColor, drawingName;
 	function setCanvasSize() {
 		var theBody = $('body');
 		width = theBody.innerWidth();
@@ -74,7 +74,23 @@ $(function() {"use strict";
 		});
 	}
 
-
+function redrawFromDB() {
+		// aLinesArray = JSON.parse(localStorage.linesArray);
+		$.each(aLinesArray, function(index, item) {
+			var temp = JSON.parse(item.item);
+			startPoint=temp[0];
+			context.strokeStyle = startPoint.color1;
+			context.lineWidth = startPoint.width1;
+			context.beginPath();
+			context.moveTo(startPoint.x, startPoint.y);
+			$.each(temp, function(index1, line1) {
+				if (index1 > 0) {
+					context.lineTo(line1.x, line1.y);
+				}
+				context.stroke();
+			});
+		});
+	}
 	$('#clear').click(function() {
 		localStorage.clear();
 		aLinesArray = [];
@@ -181,7 +197,7 @@ $(function() {"use strict";
 				localStorage.linesArray = JSON.stringify(aLinesArray);
 				var newArray = JSON.parse(localStorage.linesArray);
 				//console.dir(newArray);
-				getDB();
+				//getDB();
 			}
 			pressing = false;
 			//canvas.unbind('mouseenter');
@@ -189,10 +205,13 @@ $(function() {"use strict";
 		});
 	});
 	getDB = function() {
-		$.post("http://localhost/retrieveDrawings.php",{drawingName:drawingName},function(data){
-			console.log(data);
+		$.getJSON("http://localhost/retrieveDrawings.php",{drawingName:drawingName},function(data){
+			aLinesArray=data;
+			redrawFromDB();
+			
 		});
 	};
+	
 
 	sendDB = function(data) {
 		$.post("http://localhost/drawingPDO.php", {
@@ -210,6 +229,7 @@ $(function() {"use strict";
 				//$(this).dialog("close");
 				drawingName = $("#name").val();
 				$(this).dialog("close");
+				getDB();
 			}
 		},
 		autoOpen : false,
@@ -218,10 +238,9 @@ $(function() {"use strict";
 
 	$("#share").click(function() {
 		$.getJSON("http://localhost/getNames.php", null, function(data) {
-			//alert(data);
-			//var data1=JSON.parse(data);
+			$(".link").remove();
 			$.each(data, function(index, eachName) {
-				drawingLink = $('<a href="">' + eachName + '</a><br>').click(function() {
+				drawingLink = $('<a class="link" href="#">' + eachName + '</a><br class="link">').click(function() {
 					$("#name").val($(this).html());
 					drawingName = $(this).html();
 				});
